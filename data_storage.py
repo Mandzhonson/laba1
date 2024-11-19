@@ -1,5 +1,6 @@
 from classes import User, Instagram, Telegram, Tiktok, Vkontakte, Snapchat, Facebook, Twitter, Whatsapp
 import json
+from my_exceptions import InvalidTypeSocialNetwork,InvalidTypeFileException,InvalidIdUserException
 from xml.etree import ElementTree as ET
 class DataStorage:
     arr: list[object]
@@ -19,12 +20,12 @@ class DataStorage:
         "whatsapp": Whatsapp
     }
         if name_class.lower() not in dict_classes:
-            #exception
-            pass
+            raise InvalidTypeSocialNetwork(name_class)
         else:
             obj = dict_classes[name_class.lower()](self.id,name,surname)
             self.arr.append(obj)
             self.id += 1
+            print(f"User created.")
             return obj
     def read_all(self):
         return self.arr
@@ -32,7 +33,7 @@ class DataStorage:
         for obj in self.arr:
             if obj.id==id:
                 return obj
-        return None
+        raise InvalidIdUserException(id)
     def update(self,id:int, new_name:str = None,new_surname:str = None):
         obj = self.read_by_id(id)
         if obj:
@@ -52,37 +53,37 @@ class DataStorage:
         return f"Object not found."
     def to_json(self,filename)->None:
         if ".json" not in filename:
-            #exception
-            pass
+            raise InvalidTypeFileException(filename)
         else:
             with open(filename, "w") as file:
                  json.dump([o.to_format() for o in self.arr], file, indent=4)
     def from_json(self,filename)->None:
         if ".json" not in filename:
-            #exception
-            pass
+            raise InvalidTypeFileException(filename)
         else:
             with open(filename, "r") as file:
                 js_data = json.load(file)
                 for obj in js_data:
                     self.create(obj["social_network"],obj["name"],obj["surname"])
     def to_xml(self,filename)->None:
-        root = ET.Element("users")
-        for obj in self.arr:
-            user_elem = ET.SubElement(root, "user")
-            for key, value in obj.to_format().items():
-                ET.SubElement(user_elem, key).text = str(value)
-        tree = ET.ElementTree(root)
-        tree.write(filename)
+        if ".xml" not in filename:
+            raise InvalidTypeFileException(filename)
+        else:
+            root = ET.Element("users")
+            for obj in self.arr:
+                user_elem = ET.SubElement(root, "user")
+                for key, value in obj.to_format().items():
+                    ET.SubElement(user_elem, key).text = str(value)
+            tree = ET.ElementTree(root)
+            tree.write(filename)
     def from_xml(self,filename)->None:
-        tree = ET.parse(filename)
-        root = tree.getroot()
-        for user_elem in root.findall("user"):
-            user_data = {}
-            for child in user_elem:
-                user_data[child.tag] = child.text
-            self.create(user_data["social_network"], user_data["name"], user_data["surname"])
-ds = DataStorage()
-# Load from XML
-ds.from_xml("users.xml")
-ds.to_json("db.json")
+        if ".xml" not in filename:
+            raise InvalidTypeFileException(filename)
+        else:
+            tree = ET.parse(filename)
+            root = tree.getroot()
+            for user_elem in root.findall("user"):
+                user_data = {}
+                for child in user_elem:
+                    user_data[child.tag] = child.text
+                self.create(user_data["social_network"], user_data["name"], user_data["surname"])
