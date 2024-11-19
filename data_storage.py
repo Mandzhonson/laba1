@@ -1,40 +1,47 @@
 from classes import User, Instagram, Telegram, Tiktok, Vkontakte, Snapchat, Facebook, Twitter, Whatsapp
 import json
-from my_exceptions import InvalidTypeSocialNetwork,InvalidTypeFileException,InvalidIdUserException
+from my_exceptions import InvalidTypeSocialNetwork, InvalidTypeFileException, InvalidIdUserException
 from xml.etree import ElementTree as ET
+
+
 class DataStorage:
     arr: list[object]
-    id:int
+    id: int
+
     def __init__(self) -> None:
         self.arr = []
         self.id = 1
-    def create(self,name_class: str,name: str,surname: str):
-        dict_classes= {
-        "instagram": Instagram,
-        "telegram": Telegram,
-        "tiktok": Tiktok,
-        "vkontakte": Vkontakte,
-        "snapchat": Snapchat,
-        "facebook": Facebook,
-        "twitter": Twitter,
-        "whatsapp": Whatsapp
-    }
+
+    def create(self, name_class: str, name: str, surname: str):
+        dict_classes = {
+            "instagram": Instagram,
+            "telegram": Telegram,
+            "tiktok": Tiktok,
+            "vkontakte": Vkontakte,
+            "snapchat": Snapchat,
+            "facebook": Facebook,
+            "twitter": Twitter,
+            "whatsapp": Whatsapp
+        }
         if name_class.lower() not in dict_classes:
             raise InvalidTypeSocialNetwork(name_class)
         else:
-            obj = dict_classes[name_class.lower()](self.id,name,surname)
+            obj = dict_classes[name_class.lower()](self.id, name, surname)
             self.arr.append(obj)
             self.id += 1
             print(f"User created.")
             return obj
+
     def read_all(self):
         return self.arr
-    def read_by_id(self, id:int):
+
+    def read_by_id(self, id: int):
         for obj in self.arr:
-            if obj.id==id:
+            if obj.id == id:
                 return obj
         raise InvalidIdUserException(id)
-    def update(self,id:int, new_name:str = None,new_surname:str = None):
+
+    def update(self, id: int, new_name: str = None, new_surname: str = None):
         obj = self.read_by_id(id)
         if obj:
             if new_name:
@@ -44,28 +51,32 @@ class DataStorage:
             print(f"User with id {id} has been update")
             return obj
         return f"User not found."
-                
-    def delete(self,id)->None:
+
+    def delete(self, id) -> None:
         obj = self.read_by_id(id)
         if obj:
             self.arr.remove(obj)
             return f"Object with id {id} has been deleted."
         return f"Object not found."
-    def to_json(self,filename)->None:
+
+    def to_json(self, filename) -> None:
         if ".json" not in filename:
             raise InvalidTypeFileException(filename)
         else:
             with open(filename, "w") as file:
-                 json.dump([o.to_format() for o in self.arr], file, indent=4)
-    def from_json(self,filename)->None:
+                json.dump([o.to_format() for o in self.arr], file, indent=4)
+
+    def from_json(self, filename) -> None:
         if ".json" not in filename:
             raise InvalidTypeFileException(filename)
         else:
             with open(filename, "r") as file:
                 js_data = json.load(file)
                 for obj in js_data:
-                    self.create(obj["social_network"],obj["name"],obj["surname"])
-    def to_xml(self,filename)->None:
+                    self.create(obj["social_network"],
+                                obj["name"], obj["surname"])
+
+    def to_xml(self, filename) -> None:
         if ".xml" not in filename:
             raise InvalidTypeFileException(filename)
         else:
@@ -76,7 +87,8 @@ class DataStorage:
                     ET.SubElement(user_elem, key).text = str(value)
             tree = ET.ElementTree(root)
             tree.write(filename)
-    def from_xml(self,filename)->None:
+
+    def from_xml(self, filename) -> None:
         if ".xml" not in filename:
             raise InvalidTypeFileException(filename)
         else:
@@ -86,4 +98,5 @@ class DataStorage:
                 user_data = {}
                 for child in user_elem:
                     user_data[child.tag] = child.text
-                self.create(user_data["social_network"], user_data["name"], user_data["surname"])
+                self.create(user_data["social_network"],
+                            user_data["name"], user_data["surname"])
