@@ -158,8 +158,7 @@ class Profile:
             "videos": [video.to_dict() for video in self.videos],
             "posts": [post.to_dict() for post in self.posts],
         }
-
-    @classmethod
+    
     def from_dict(cls, data):
         user_data = data["user"]
         user = User(user_data["name"], user_data["surname"])
