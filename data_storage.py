@@ -8,14 +8,14 @@ class ProfileManager:
     def __init__(self):
         self.profiles = []
 
-    def create_profile(self, name: str, surname: str):
+    def create_profile(self, name: str, surname: str) -> None:
         user = User(name, surname)
         profile = Profile(user)
         self.profiles.append(profile)
         print(f"Профиль для пользователя {name} {
               surname} создан с ID {user.id}.")
 
-    def delete_profile(self, user_id: int):
+    def delete_profile(self, user_id: int) -> None:
         profile_to_delete = None
         for profile in self.profiles:
             if profile.user.id == user_id:

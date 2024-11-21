@@ -7,7 +7,7 @@ def interface_info():
     print("\nВыберите действие:")
     print("1. Создать профиль пользователя")
     print("2. Добавить данные (фото, видео, пост)")
-    print("3. Обновить данные (фото, видео, пост)")
+    print("3. Обновить данные (фото, видео, пост, имя и фамилию)")
     print("4. Удалить данные (фото, видео, пост)")
     print("5. Удалить профиль пользователя")
     print("6. Вывести информацию о пользователе по ID")
@@ -87,6 +87,12 @@ def main():
                                 new_content = input(
                                     "Введите новое содержание: ")
                                 profile.update_post(post_id, new_content)
+                            case "4":
+                                name = input(
+                                    "Введите новое имя пользователя: ")
+                                surname = input(
+                                    "Введите новую фамилию пользователя")
+                                profile.update_name_surname(name, surname)
                     except (InvalidIdException, ValueError) as err:
                         print(f"Error: {err}")
 
