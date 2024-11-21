@@ -1,20 +1,53 @@
 [
     {
-        "social_network": "Instagram",
-        "id": 1,
-        "name": "Mikhail",
-        "surname": "Manzhos"
+        "user": {
+            "id": 1,
+            "name": "Misha",
+            "surname": "Manzhos"
+        },
+        "photos": [
+            {
+                "photo_id": 1,
+                "file_name": "new"
+            },
+            {
+                "photo_id": 3,
+                "file_name": "testik"
+            }
+        ],
+        "videos": [
+            {
+                "video_id": 1,
+                "file_name": "Приколы 2007",
+                "duration": 250
+            }
+        ],
+        "posts": []
     },
     {
-        "social_network": "Facebook",
-        "id": 2,
-        "name": "Igor",
-        "surname": "Ivanov"
-    },
-    {
-        "social_network": "Snapchat",
-        "id": 3,
-        "name": "Vasya",
-        "surname": "Pupkin"
+        "user": {
+            "id": 2,
+            "name": "Vasya",
+            "surname": "Pupkin"
+        },
+        "photos": [
+            {
+                "photo_id": 2,
+                "file_name": "photo"
+            }
+        ],
+        "videos": [
+            {
+                "video_id": 2,
+                "file_name": "бульба",
+                "duration": 160
+            }
+        ],
+        "posts": [
+            {
+                "post_id": 1,
+                "content": "шок контент, котики уснули на хозяине!"
+            }
+        ]
     }
 ]
